@@ -15,25 +15,19 @@ pipeline {
             }
         }
 
-        stage('Docker Build') {
-            steps {
-                sh 'docker build -t $IMAGE_NAME .'
-            }
-        }
-
-        stage('Docker Login & Push') {
+        stage('Docker Build & Push') {
             steps {
                 script {
-                    // Inject DockerHub username/password from Jenkins credentials
+                    // DockerHub credentials
                     withCredentials([usernamePassword(
-                        credentialsId: 'dockerhuhpass', 
-                        usernameVariable: 'docker_user', 
+                        credentialsId: 'dockerhuhpass',
+                        usernameVariable: 'docker_user',
                         passwordVariable: 'docker_password'
                     )]) {
                         sh '''
-                            echo "Logging in to DockerHub..."
                             echo "$docker_password" | docker login -u "$docker_user" --password-stdin
-                            docker tag $IMAGE_NAME:latest $DOCKER_REPO:latest
+                            docker build -t $IMAGE_NAME .
+                            docker tag $IMAGE_NAME $DOCKER_REPO:latest
                             docker push $DOCKER_REPO:latest
                         '''
                     }
@@ -43,13 +37,17 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                // Run all commands in a single shell
-                sh '''
-                    cd /var/lib/jenkins/workspace/job
-                    kubectl apply -f deployment.yml 
-                    kubectl apply -f service.yml 
-                    kubectl get svc
-                '''
+                script {
+                    // AWS credentials for EKS kubeconfig
+                    withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: 'aws-creds']]) {
+                        sh '''
+                            export AWS_DEFAULT_REGION=ap-south-1
+                            kubectl apply -f /var/lib/jenkins/workspace/job/deployment.yml
+                            kubectl apply -f /var/lib/jenkins/workspace/job/service.yml
+                            kubectl get svc
+                        '''
+                    }
+                }
             }
         }
     }
