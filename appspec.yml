@@ -1,0 +1,28 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /
+    overwrite: true
+file_exists_behavior: OVERWRITE
+permissions:
+  - object: /
+    pattern: "**"
+    owner: root
+    group: root
+    chmod: 777
+hooks:
+  BeforeInstall:
+    - location: before_install.sh
+      timeout: 300
+      runas: root
+
+  AfterInstall:   
+    - location: after_install.sh
+      timeout: 300
+      runas: root
+
+  ApplicationStart:
+    - location: app_start.sh
+      timeout: 300
+      runas: root
