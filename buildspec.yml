@@ -1,0 +1,29 @@
+version: 0.2
+
+env:
+  variables:
+    AWS_REGION: "us-east-1"
+    IMAGE_REPO_URI: "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi"
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $IMAGE_REPO_URI
+
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - docker build -t myimg1 .
+      - docker tag myimg1:latest $IMAGE_REPO_URI:latest
+
+  post_build:
+    commands:
+      - echo Pushing image to ECR...
+      - docker push $IMAGE_REPO_URI:latest
+      - echo Build completed on `date`
+
+artifacts:
+  files:
+    - '**/*'
