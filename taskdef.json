@@ -1,0 +1,16 @@
+{
+  "family": "taskfamily",
+  "containerDefinitions": [
+    {
+      "name": "c1",
+      "image": "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi:latest",
+      "portMappings": [
+        {
+          "containerPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true
+    }
+  ]
+}
