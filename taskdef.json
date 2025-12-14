@@ -3,7 +3,7 @@
   "containerDefinitions": [
     {
       "name": "c1",
-      "image": "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi:latest",
+      "image": "<IMAGE1>",
       "portMappings": [
         {
           "containerPort": 80,
