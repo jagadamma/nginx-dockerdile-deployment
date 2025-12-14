@@ -1,16 +1,21 @@
 {
   "family": "taskfamily",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
   "containerDefinitions": [
     {
       "name": "c1",
-      "image": "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi:latest",
+      "image": "<IMAGE1>",
       "portMappings": [
         {
           "containerPort": 80,
           "protocol": "tcp"
         }
       ],
-      "essential": true
+      "essential": true,
+      "memory": 256
     }
   ]
 }
