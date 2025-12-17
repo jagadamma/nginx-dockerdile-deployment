@@ -29,8 +29,7 @@ phases:
 
 artifacts:
   files:
-    - appspec.yaml
-    - taskdef.json
-    - taskdef-app2.json
-
+    - taskdef-app*.json
+    - appspec-app*.yaml
+    
   discard-paths: yes
