@@ -1,0 +1,21 @@
+{
+  "family": "taskfamily-app2",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "256",
+  "memory": "512",
+  "executionRoleArn": "arn:aws:iam::132398229882:role/ecsTaskExecutionRole",
+  "containerDefinitions": [
+    {
+      "name": "app2",
+      "image": "132398229882.dkr.ecr.us-east-2.amazonaws.com/sharadha-dev-us-ecr1:latest",
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true
+    }
+  ]
+}
