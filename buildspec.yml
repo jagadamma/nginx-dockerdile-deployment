@@ -1,31 +1,27 @@
 version: 0.2
 
-env:
-  variables:
-    AWS_REGION: "us-east-1"
-    IMAGE_REPO_URI: "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi"
-
 phases:
   pre_build:
     commands:
-      - echo Logging in to Amazon ECR...
-      - aws ecr get-login-password --region $AWS_REGION |
-        docker login --username AWS --password-stdin 132398229882.dkr.ecr.us-east-1.amazonaws.com
+      - ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+      - REGION=$(aws configure get region)
+      - IMAGE_NAME=abi
+      - aws ecr get-login-password --region $REGION |
+        docker login --username AWS --password-stdin \
+        $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com
 
   build:
     commands:
-      - echo Build started on `date`
-      - docker build -f Dockerfile -t myimg1 .
-      - docker tag myimg1:latest $IMAGE_REPO_URI:latest
+      - docker build -t $IMAGE_NAME .
+      - docker tag $IMAGE_NAME:latest \
+        $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$IMAGE_NAME:latest
 
   post_build:
     commands:
-      - echo Pushing image to ECR...
-      - docker push $IMAGE_REPO_URI:latest
-      - echo Build completed on `date`
+      - docker push \
+        $ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/$IMAGE_NAME:latest
 
 artifacts:
   files:
     - appspec.yaml
     - taskdef.json
-  discard-paths: yes
