@@ -5,10 +5,11 @@
   "cpu": "256",
   "memory": "512",
   "executionRoleArn": "arn:aws:iam::132398229882:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::132398229882:role/ecsTaskRole",
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "132398229882.dkr.ecr.us-east-1.amazonaws.com/abi:latest",
+      "image": "132398229882.dkr.ecr.us-east-2.amazonaws.com/sharadha-dev-us-ecr:latest",
       "portMappings": [
         {
           "containerPort": 80,
