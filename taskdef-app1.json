@@ -9,14 +9,14 @@
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "nginx:latest"
+      "image": "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-ecr1:v2",
+      "essential": true,
       "portMappings": [
         {
           "containerPort": 80,
           "protocol": "tcp"
         }
-      ],
-      "essential": true
+      ]
     }
   ]
 }
