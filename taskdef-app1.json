@@ -1,23 +1,22 @@
 {
-  "family": "taskfamily",
+  "family": "app1-task",
   "networkMode": "awsvpc",
   "requiresCompatibilities": ["FARGATE"],
   "cpu": "256",
   "memory": "512",
-  "executionRoleArn": "arn:aws:iam::132398229882:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::132398229882:role/ecsTaskRole",
+  "executionRoleArn": "<EXECUTION_ROLE_ARN>",
+  "taskRoleArn": "<TASK_ROLE_ARN>",
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "132398229882.dkr.ecr.us-east-2.amazonaws.com/sharadha-dev-us-ecr:latest",
+      "image": "<IMAGE1_NAME>",
       "portMappings": [
         {
           "containerPort": 80,
           "protocol": "tcp"
         }
       ],
-      "essential": true,
-      "memory": 256
+      "essential": true
     }
   ]
 }
