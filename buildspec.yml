@@ -1,10 +1,10 @@
 version: 0.2
 
-env:
-  variables:
-    ACCOUNT_ID: "132398229882"
-    IMAGE_REPO_NAME: "sharadha-dev-us-ecr"
-    IMAGE_REPO_URI: "132398229882.dkr.ecr.us-east-2.amazonaws.com/sharadha-dev-us-ecr"
+# env:
+#   variables:
+#     ACCOUNT_ID: "132398229882"
+#     IMAGE_REPO_NAME: "sharadha-dev-us-ecr"
+#     IMAGE_REPO_URI: "132398229882.dkr.ecr.us-east-2.amazonaws.com/sharadha-dev-us-ecr"
 
 phases:
   pre_build:
