@@ -5,7 +5,6 @@ env:
     AWS_REGION: ap-southeast-1
     ACCOUNT_ID: "132398229882"
     SERVICE_NAME: "app1"
-    ECR_REPO_NAME: "posistrength-dev-ecr1"
     ECR_REPO_URI: "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-ecr1"
     IMAGE_TAG: "v1"
 
@@ -13,13 +12,11 @@ phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
-      - aws ecr get-login-password --region $AWS_REGION \
-        | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
 
   build:
     commands:
       - echo "Build started on $(date)"
-      - echo "Building Docker image with tag v1..."
       - docker build -t $ECR_REPO_URI:$IMAGE_TAG .
 
   post_build:
@@ -28,10 +25,7 @@ phases:
       - docker push $ECR_REPO_URI:$IMAGE_TAG
 
       - echo "Generating imagedefinitions.json..."
-      - printf '[{"name":"%s","imageUri":"%s"}]' \
-        "$SERVICE_NAME" \
-        "$ECR_REPO_URI:$IMAGE_TAG" \
-        > imagedefinitions.json
+      - printf '[{"name":"%s","imageUri":"%s"}]' "$SERVICE_NAME" "$ECR_REPO_URI:$IMAGE_TAG" > imagedefinitions.json
 
       - echo "Build completed on $(date)"
 
