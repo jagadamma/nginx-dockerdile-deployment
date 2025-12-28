@@ -6,7 +6,7 @@ env:
     ACCOUNT_ID: "132398229882"
     SERVICE_NAME: "app1"
     ECR_REPO_URI: "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-ecr1"
-    IMAGE_TAG: "v1"
+    IMAGE_TAG: "v2"
 
 phases:
   pre_build:
