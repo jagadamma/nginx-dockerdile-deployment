@@ -9,21 +9,22 @@ phases:
     commands:
       - echo "Logging in to Amazon ECR..."
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - echo "Account: $AWS_ACCOUNT_ID"
-      - echo "Repo: $ECR_REPO_URI"
-      - echo "Tag: $IMAGE_TAG"
+      - echo "Account ID: $AWS_ACCOUNT_ID"
+      - echo "ECR Repo: $ECR_REPO_URI"
+      - echo "Image Tag: $IMAGE_TAG"
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
   build:
     commands:
-      - echo "Building image..."
-      - docker build -t $ECR_REPO_URI:$IMAGE_TAG .
+      - echo "Building Docker image..."
+      - docker build -t ${ECR_REPO_URI}:${IMAGE_TAG} .
 
   post_build:
     commands:
-      - echo "Pushing image..."
-      - docker push $ECR_REPO_URI:$IMAGE_TAG
-      - printf '[{"name":"app1","imageUri":"%s"}]' "$ECR_REPO_URI:$IMAGE_TAG" > imagedefinitions.json
+      - echo "Pushing Docker image..."
+      - docker push ${ECR_REPO_URI}:${IMAGE_TAG}
+      - echo "Generating imagedefinitions.json"
+      - printf '[{"name":"app1","imageUri":"%s"}]' "${ECR_REPO_URI}:${IMAGE_TAG}" > imagedefinitions.json
 
 artifacts:
   files:
