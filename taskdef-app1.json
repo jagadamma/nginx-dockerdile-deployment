@@ -1,21 +1,10 @@
 {
-  "family": "app1-task",
-  "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
-  "cpu": "256",
-  "memory": "512",
-  "executionRoleArn": "arn:aws:iam::132398229882:role/ecsTaskExecutionRole",
-  "taskRoleArn": "arn:aws:iam::132398229882:role/ecsTaskRole",
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-ecr1:v2",
-      "essential": true,
+      "image": "<IMAGE1_NAME>",
       "portMappings": [
-        {
-          "containerPort": 80,
-          "protocol": "tcp"
-        }
+        { "containerPort": 80 }
       ]
     }
   ]
