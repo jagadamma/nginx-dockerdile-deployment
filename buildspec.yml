@@ -12,14 +12,13 @@ phases:
       - echo "Build started on $(date)"
       - docker build -t $ECR_REPO:$IMAGE_TAG .
 
-  post_build:
-    commands:
-      - echo "Pushing image to ECR..."
-      - docker push $ECR_REPO:$IMAGE_TAG
-      - echo "Build completed on $(date)"
+ post_build:
+  commands:
+    - docker push $ECR_REPO_URI:$IMAGE_TAG
+    - printf '[{"name":"app1","imageUri":"%s"}]' "$ECR_REPO_URI:$IMAGE_TAG" > imagedefinitions.json
 
 artifacts:
   files:
+    - imagedefinitions.json
     - taskdef-app1.json
     - appspec-app1.yaml
-  discard-paths: yes
