@@ -1,7 +1,6 @@
 version: 0.2
 
 env:
-  shell: bash
   variables:
     AWS_REGION: ap-southeast-1
     IMAGE_REPO_URI: 132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr
@@ -20,8 +19,6 @@ phases:
   post_build:
     commands:
       - docker push $NEW_IMAGE_URI
-      - jq --arg IMAGE "$NEW_IMAGE_URI" '.containerDefinitions[0].image = $IMAGE' taskdef-app1.json > tmp.json
-      - mv tmp.json taskdef-app1.json
 
 artifacts:
   files:
