@@ -3,8 +3,12 @@
     {
       "name": "app1",
       "image": "<IMAGE1_NAME>",
+      "essential": true,
       "portMappings": [
-        { "containerPort": 80 }
+        {
+          "containerPort": 80,
+          "hostPort": 80
+        }
       ]
     }
   ]
