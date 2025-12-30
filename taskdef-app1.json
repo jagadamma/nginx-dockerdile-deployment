@@ -8,7 +8,7 @@
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "PLACEHOLDER",
+      "image": "IMAGE1_NAME",
       "essential": true,
       "portMappings": [
         {
