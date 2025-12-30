@@ -1,8 +1,10 @@
-version: 0.0
+version: 1
 Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
+        TaskDefinition: taskdef-app1.json
         LoadBalancerInfo:
           ContainerName: app1
           ContainerPort: 80
+        PlatformVersion: LATEST
