@@ -1,6 +1,6 @@
 [
   {
     "name": "app1",
-    "imageUri": "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-ecr1:v2"
+    "imageUri": "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr:16"
   }
 ]
