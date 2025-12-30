@@ -1,23 +1,37 @@
 version: 0.2
 
 env:
+  shell: bash
   variables:
     AWS_REGION: ap-southeast-1
 
 phases:
   pre_build:
     commands:
+      - echo "Logging in to Amazon ECR..."
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - aws ecr get-login-password --region $AWS_REGION |
-        docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+
+      # ✅ Generate a UNIQUE image tag per build (IMPORTANT)
+      - IMAGE_TAG=$CODEBUILD_BUILD_NUMBER
+      - export IMAGE_TAG
+
+      # ✅ Full ECR image URI
+      - ECR_REPO_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/posistrength-dev-ecr1
+      - export ECR_REPO_URI
+
+      - echo "Using image: $ECR_REPO_URI:$IMAGE_TAG"
 
   build:
     commands:
+      - echo "Building Docker image..."
       - docker build -t $ECR_REPO_URI:$IMAGE_TAG .
 
   post_build:
     commands:
+      - echo "Pushing Docker image..."
       - docker push $ECR_REPO_URI:$IMAGE_TAG
+      - echo "Image pushed successfully"
 
 artifacts:
   files:
