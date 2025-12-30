@@ -8,7 +8,7 @@
   "containerDefinitions": [
     {
       "name": "app1",
-      "image": "IMAGE1_NAME",
+      "image": "132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr:latest",
       "essential": true,
       "portMappings": [
         {
