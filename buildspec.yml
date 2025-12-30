@@ -8,16 +8,16 @@ phases:
   pre_build:
     commands:
       - AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
+      - aws ecr get-login-password --region $AWS_REGION |
+        docker login --username AWS --password-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com
 
   build:
     commands:
       - IMAGE_TAG=$CODEBUILD_BUILD_NUMBER
       - docker build -t $ECR_REPO_URI:$IMAGE_TAG .
-
-  post_build:
-    commands:
       - docker push $ECR_REPO_URI:$IMAGE_TAG
+
+      # Generate imagedefinitions.json for CodeDeploy
       - printf '[{"name":"app1","imageUri":"%s"}]' "$ECR_REPO_URI:$IMAGE_TAG" > imagedefinitions.json
 
 artifacts:
