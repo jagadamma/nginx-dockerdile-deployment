@@ -11,10 +11,7 @@
       "image": "IMAGE1_NAME",
       "essential": true,
       "portMappings": [
-        {
-          "containerPort": 80,
-          "protocol": "tcp"
-        }
+        { "containerPort": 80, "protocol": "tcp" }
       ]
     }
   ]
