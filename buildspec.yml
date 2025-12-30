@@ -9,21 +9,24 @@ env:
 phases:
   pre_build:
     commands:
+      - echo Logging in to Amazon ECR
       - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $(aws sts get-caller-identity --query Account --output text).dkr.ecr.$AWS_REGION.amazonaws.com
       - IMAGE_TAG=v1.$CODEBUILD_BUILD_NUMBER
       - NEW_IMAGE_URI=$IMAGE_REPO_URI:$IMAGE_TAG
-      - echo "New image: $NEW_IMAGE_URI"
+      - echo Image URI is $NEW_IMAGE_URI
 
   build:
     commands:
+      - echo Build started
       - docker build -t $NEW_IMAGE_URI .
 
   post_build:
     commands:
+      - echo Pushing image
       - docker push $NEW_IMAGE_URI
+      - echo Updating task definition
       - jq --arg IMAGE "$NEW_IMAGE_URI" '.containerDefinitions[0].image = $IMAGE' taskdef-app1.json > tmp.json
       - mv tmp.json taskdef-app1.json
-      - cat taskdef-app1.json
 
 artifacts:
   files:
