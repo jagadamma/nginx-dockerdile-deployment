@@ -25,18 +25,16 @@ phases:
       - sed -i "s/CODEBUILD_BUILD_NUMBER/$CODEBUILD_BUILD_NUMBER/g" appspec-app1.yaml
 
   post_build:
-    commands:
-      - echo "Build completed on $(date)"
-      - echo "Pushing Docker image..."
-      - docker push $NEW_IMAGE_URI
+  commands:
+    - echo "Build completed on $(date)"
+    - echo "Pushing Docker image..."
+    - docker push $NEW_IMAGE_URI
 
-      - echo "Updating task definition image..."
-      - cat taskdef-app1.json
-      - jq --arg IMAGE "$NEW_IMAGE_URI" \
-        '.containerDefinitions[0].image = $IMAGE' \
-        taskdef-app1.json > tmp_taskdef.json
-      - mv tmp_taskdef.json taskdef-app1.json
-      - cat taskdef-app1.json
+    - echo "Updating task definition image..."
+    - cat taskdef-app1.json
+    - jq --arg IMAGE "$NEW_IMAGE_URI" '.containerDefinitions[0].image = $IMAGE' taskdef-app1.json > tmp_taskdef.json
+    - mv tmp_taskdef.json taskdef-app1.json
+    - cat taskdef-app1.json
 
 artifacts:
   files:
