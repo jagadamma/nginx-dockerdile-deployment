@@ -7,4 +7,4 @@ Resources:
         LoadBalancerInfo:
           ContainerName: app1
           ContainerPort: 80
-        PlatformVersion: LATEST
+       
