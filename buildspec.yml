@@ -3,45 +3,40 @@ version: 0.2
 env:
   shell: bash
   variables:
-    ECS_SERVICE: app1-service 
+    AWS_REGION: ap-southeast-1
+    ECS_SERVICE: app1-service
     ECS_CONTAINER: app1
-    IMAGE_REPO_NAME: 132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr
+    IMAGE_REPO_URI: 132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr
+
 phases:
   pre_build:
     commands:
       - echo "Logging in to Amazon ECR..."
       - export AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query "Account" --output text)
-      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 132398229882.dkr.ecr.ap-southeast-1.amazonaws.com
-      # Generate unique immutable tag per build
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
       - IMAGE_TAG=v1.$CODEBUILD_BUILD_NUMBER
-      - NEW_IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG"
-      - echo "Using IMAGE_TAG=$IMAGE_TAG"
+      - NEW_IMAGE_URI=$IMAGE_REPO_URI:$IMAGE_TAG
+      - echo "Using image: $NEW_IMAGE_URI"
 
   build:
     commands:
       - echo "Build started on $(date)"
-      - echo "Building the Docker image..."
-      - docker build -t $NEW_IMAGE_URI --build-arg BASE_IMAGE=132398229882.dkr.ecr.ap-southeast-1.amazonaws.com/posistrength-dev-webposistrength-ecr .
-      - sed -i "s/CODEBUILD_BUILD_NUMBER/$CODEBUILD_BUILD_NUMBER/g" appspec.yaml
+      - docker build -t $NEW_IMAGE_URI .
+      - sed -i "s/CODEBUILD_BUILD_NUMBER/$CODEBUILD_BUILD_NUMBER/g" appspec-app1.yaml
 
   post_build:
     commands:
       - echo "Build completed on $(date)"
-      - echo "Pushing the Docker image..."
+      - echo "Pushing Docker image..."
       - docker push $NEW_IMAGE_URI
-      - echo "Updating task definition in ECS with new image URI..."
 
-      # Print the content of taskdef.json before the update
-      - echo "Task definition JSON before update:"
-      - cat taskdef.json
-
-      # Update the image tag in the task definition JSON file
-      - jq --arg newImageUri "$NEW_IMAGE_URI" '.containerDefinitions[0].image |= $newImageUri' taskdef-app1.json > tmp_taskdef.app1.json
-      - mv tmp_taskdef.json taskdef.json
-
-      # Print the content of taskdef.json after the update
-      - echo "Task definition JSON after update:"
-      - cat taskdef.json
+      - echo "Updating task definition image..."
+      - cat taskdef-app1.json
+      - jq --arg IMAGE "$NEW_IMAGE_URI" \
+        '.containerDefinitions[0].image = $IMAGE' \
+        taskdef-app1.json > tmp_taskdef.json
+      - mv tmp_taskdef.json taskdef-app1.json
+      - cat taskdef-app1.json
 
 artifacts:
   files:
